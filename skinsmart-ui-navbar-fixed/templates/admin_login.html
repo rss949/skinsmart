@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login | SkinSmart</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Manrope', sans-serif; }
+    h1 { font-family: 'Playfair Display', serif; }
+  </style>
+</head>
+<body class="min-h-screen bg-[#f3f5f1]">
+  <div class="min-h-screen grid lg:grid-cols-2">
+    <section class="hidden lg:flex relative items-center justify-center overflow-hidden bg-gradient-to-br from-[#1c2e2b] via-[#234c3b] to-[#3f7a5f] p-12">
+      <div class="absolute -top-20 -left-14 w-72 h-72 rounded-full bg-white/10 blur-3xl"></div>
+      <div class="absolute -bottom-16 -right-14 w-72 h-72 rounded-full bg-[#d8f3e3]/20 blur-3xl"></div>
+      <div class="relative max-w-md text-white">
+        <p class="text-sm uppercase tracking-[0.25em] text-[#d5f3e4]">Admin Console</p>
+        <h1 class="mt-6 text-5xl leading-tight">Control Center</h1>
+        <p class="mt-5 text-lg text-[#e4f4ec]">
+          Review platform activity, manage users, and monitor analysis usage in one place.
+        </p>
+      </div>
+    </section>
+
+    <section class="flex items-center justify-center p-6 sm:p-10">
+      <div class="w-full max-w-md bg-white rounded-3xl shadow-xl shadow-[#0f3b2b]/10 border border-[#e9efe9] p-8 sm:p-10">
+        <a href="/" class="inline-flex items-center gap-2 text-sm font-medium text-[#325c47] hover:text-[#1f3d30] transition">
+          <span aria-hidden="true">&larr;</span> Back to Home
+        </a>
+
+        <h1 class="mt-6 text-4xl text-[#1a2c25]">Admin Login</h1>
+        <p class="mt-2 text-sm text-[#5b6f65]">
+          {% if otp_stage %}
+            Enter the OTP sent to the admin email to finish signing in.
+          {% else %}
+            Sign in with the admin email and password.
+          {% endif %}
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="mt-5 space-y-2">
+              {% for category, message in messages %}
+                <div class="rounded-xl px-4 py-3 text-sm font-medium {% if category == 'success' %}bg-emerald-50 text-emerald-700 border border-emerald-200{% else %}bg-red-50 text-red-700 border border-red-200{% endif %}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/admin/login" class="mt-7 space-y-5">
+          {% if otp_stage %}
+            <input type="hidden" name="step" value="otp">
+            <div>
+              <label for="admin_email" class="block text-sm font-semibold text-[#2a4a3a] mb-2">Admin Email</label>
+              <input
+                id="admin_email"
+                type="email"
+                value="{{ admin_email }}"
+                disabled
+                class="w-full rounded-xl border border-[#d5e1d9] bg-[#f4f8f5] px-4 py-3 text-[#52665c] outline-none"
+              >
+            </div>
+            <div>
+              <label for="otp" class="block text-sm font-semibold text-[#2a4a3a] mb-2">One-Time Password</label>
+              <input
+                id="otp"
+                name="otp"
+                type="text"
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                maxlength="6"
+                required
+                autocomplete="one-time-code"
+                class="w-full rounded-xl border border-[#d5e1d9] bg-[#fbfdfb] px-4 py-3 text-[#21352b] outline-none focus:border-[#4f7f63] focus:ring-2 focus:ring-[#4f7f63]/20"
+                placeholder="Enter 6-digit OTP"
+              >
+            </div>
+            <button class="w-full rounded-xl bg-[#355e4a] text-white py-3.5 font-semibold hover:bg-[#2a4c3b] transition">
+              Verify OTP
+            </button>
+          {% else %}
+            <input type="hidden" name="step" value="credentials">
+            <div>
+              <label for="email" class="block text-sm font-semibold text-[#2a4a3a] mb-2">Admin Email</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                autocomplete="email"
+                value="{{ admin_email }}"
+                class="w-full rounded-xl border border-[#d5e1d9] bg-[#fbfdfb] px-4 py-3 text-[#21352b] outline-none focus:border-[#4f7f63] focus:ring-2 focus:ring-[#4f7f63]/20"
+                placeholder="Enter admin email"
+              >
+            </div>
+
+            <div>
+              <label for="password" class="block text-sm font-semibold text-[#2a4a3a] mb-2">Admin Password</label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                autocomplete="current-password"
+                class="w-full rounded-xl border border-[#d5e1d9] bg-[#fbfdfb] px-4 py-3 text-[#21352b] outline-none focus:border-[#4f7f63] focus:ring-2 focus:ring-[#4f7f63]/20"
+                placeholder="Enter admin password"
+              >
+            </div>
+
+            <button class="w-full rounded-xl bg-[#355e4a] text-white py-3.5 font-semibold hover:bg-[#2a4c3b] transition">
+              Send OTP
+            </button>
+          {% endif %}
+        </form>
+      </div>
+    </section>
+  </div>
+<footer class="px-6 py-6 text-center text-sm text-[#6b8076]">
+  AI-based skincare suggestions only. Not a medical diagnosis.
+</footer>
+</body>
+</html>

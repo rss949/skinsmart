@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkinSmart</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+    .hero-shell {
+      background: linear-gradient(180deg, #fbfefc 0%, #f4faf6 100%);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(340px, 520px);
+      gap: 4rem;
+      align-items: center;
+    }
+    .hero-copy {
+      max-width: 640px;
+    }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1rem;
+      border-radius: 999px;
+      background: #eaf5ed;
+      color: #3f7459;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .hero-title {
+      margin-top: 1.5rem;
+      font-size: clamp(3rem, 5vw, 4.9rem);
+      line-height: 1.02;
+      color: #163227;
+    }
+    .hero-title-accent {
+      color: #4f7f63;
+    }
+    .hero-description {
+      margin-top: 1.5rem;
+      max-width: 36rem;
+      font-size: 1.125rem;
+      line-height: 1.9;
+      color: #587069;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2.25rem;
+    }
+    .hero-primary-btn,
+    .hero-secondary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 200px;
+      padding: 1rem 1.75rem;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease, color 0.22s ease;
+    }
+    .hero-primary-btn {
+      background: #4f7f63;
+      color: #fff;
+      box-shadow: 0 16px 30px rgba(79, 127, 99, 0.18);
+    }
+    .hero-primary-btn:hover {
+      transform: translateY(-1px);
+      background: #456f57;
+      box-shadow: 0 18px 34px rgba(79, 127, 99, 0.24);
+    }
+    .hero-secondary-btn {
+      border: 1px solid #b8d1c2;
+      color: #335844;
+      background: rgba(255, 255, 255, 0.75);
+    }
+    .hero-secondary-btn:hover {
+      transform: translateY(-1px);
+      background: #eef6f0;
+    }
+    .hero-image-wrap {
+      position: relative;
+    }
+    .hero-image-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 30px;
+      background: #eef4ef;
+      box-shadow: 0 28px 70px rgba(18, 45, 34, 0.12);
+      padding: 1rem;
+      min-height: 0;
+    }
+    .hero-image-card::before {
+      content: "";
+      position: absolute;
+      inset: 1rem;
+      border-radius: 24px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 35%, rgba(255,255,255,0) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .hero-image {
+      position: relative;
+      z-index: 0;
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 720px;
+      object-fit: contain;
+      object-position: center;
+      border-radius: 24px;
+      background: #f7faf8;
+    }
+    @media (max-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .hero-copy {
+        text-align: center;
+        max-width: 760px;
+        margin: 0 auto;
+      }
+      .hero-description,
+      .hero-actions {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .hero-actions {
+        justify-content: center;
+      }
+      .hero-image-wrap {
+        max-width: 560px;
+        width: 100%;
+        margin: 0 auto;
+      }
+      .hero-image-card {
+        width: 100%;
+      }
+    }
+    @media (max-width: 640px) {
+      .hero-shell {
+        padding-top: 3.5rem;
+        padding-bottom: 3.5rem;
+      }
+      .hero-title {
+        font-size: 2.6rem;
+      }
+      .hero-description {
+        font-size: 1rem;
+        line-height: 1.8;
+      }
+      .hero-primary-btn,
+      .hero-secondary-btn {
+        width: 100%;
+      }
+      .hero-image-card {
+        padding: 0.75rem;
+        border-radius: 24px;
+      }
+    .hero-image-card::before {
+        inset: 0.75rem;
+        border-radius: 18px;
+      }
+    }
+    .feedback-scroll {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .feedback-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .feedback-track {
+      width: max-content;
+    }
+    .feedback-showcase::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(251, 252, 250, 0.92) 0%, rgba(240, 247, 243, 0.9) 100%);
+      pointer-events: none;
+    }
+    .feedback-showcase::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(249, 253, 252, 0.74) 0%, rgba(239, 247, 244, 0.8) 100%),
+        radial-gradient(circle at 22% 28%, rgba(214, 244, 247, 0.5), transparent 24%),
+        radial-gradient(circle at 82% 26%, rgba(182, 224, 238, 0.32), transparent 20%);
+      pointer-events: none;
+    }
+    .feedback-showcase__image {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(251, 252, 250, 0.72) 0%, rgba(251, 252, 250, 0.36) 24%, rgba(251, 252, 250, 0.18) 54%, rgba(251, 252, 250, 0.4) 100%),
+        url("{{ url_for('static', filename='images/bottle.jpg') }}") center center / cover no-repeat;
+      opacity: 0.68;
+      transform: scale(1.03);
+      pointer-events: none;
+    }
+    @media (max-width: 640px) {
+      .feedback-showcase__image {
+        background-position: 68% center;
+        opacity: 0.5;
+        transform: scale(1.06);
+      }
+    }
+    .feedback-fade {
+      opacity: 0;
+      transform: translateY(26px);
+      animation: feedbackFadeIn 0.8s ease forwards;
+    }
+    .feedback-fade:nth-child(2) {
+      animation-delay: 0.08s;
+    }
+    .feedback-fade:nth-child(3) {
+      animation-delay: 0.16s;
+    }
+    .feedback-fade:nth-child(4) {
+      animation-delay: 0.24s;
+    }
+    .feedback-star.is-active {
+      background: linear-gradient(135deg, #f5c451 0%, #f0a534 100%);
+      color: #fff;
+      border-color: #f3c96b;
+      box-shadow: 0 14px 28px rgba(240, 165, 52, 0.24);
+    }
+    .feedback-star.is-hover {
+      transform: translateY(-2px) scale(1.03);
+      border-color: rgba(252, 211, 77, 0.82);
+      color: #f0a534;
+      box-shadow: 0 12px 24px rgba(240, 165, 52, 0.16);
+    }
+    .feedback-form-shell {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 2rem 1.5rem;
+      isolation: isolate;
+      background: #0f1f1b;
+    }
+    .feedback-form-shell::before {
+      content: "";
+      position: absolute;
+      inset: -3rem;
+      background:
+        linear-gradient(180deg, rgba(8, 16, 14, 0.12) 0%, rgba(7, 16, 13, 0.22) 100%),
+        url("{{ url_for('static', filename='images/happy.jpg') }}") center center / cover no-repeat;
+      filter: blur(4px);
+      transform: scale(1.03);
+      z-index: -2;
+    }
+    .feedback-form-shell::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top left, rgba(147, 197, 253, 0.08), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.1), transparent 28%),
+        linear-gradient(135deg, rgba(6, 14, 11, 0.14), rgba(9, 20, 17, 0.2));
+      z-index: -1;
+    }
+    .feedback-form-card {
+      position: relative;
+      width: min(100%, 42rem);
+      border-radius: 1.1rem;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(245, 250, 247, 0.05);
+      backdrop-filter: blur(8px);
+      box-shadow:
+        0 24px 80px rgba(7, 16, 13, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16);
+      padding: 1.25rem 2rem;
+      animation: feedbackCardFloat 6s ease-in-out infinite;
+    }
+    .feedback-form-card::before {
+      content: "";
+      position: absolute;
+      inset: 1px 1px auto 1px;
+      height: 38%;
+      border-radius: 1.5rem 1.5rem 1rem 1rem;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.01));
+      pointer-events: none;
+    }
+    .feedback-form-input,
+    .feedback-form-textarea {
+      width: 100%;
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.05);
+      color: #f8fffb;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+    .feedback-form-input::placeholder,
+    .feedback-form-textarea::placeholder {
+      color: rgba(231, 243, 236, 0.76);
+    }
+    .feedback-form-input:focus,
+    .feedback-form-textarea:focus {
+      border-color: rgba(74, 222, 128, 0.65);
+      box-shadow:
+        0 0 0 4px rgba(16, 185, 129, 0.18),
+        0 18px 36px rgba(16, 185, 129, 0.1);
+      background: rgba(255, 255, 255, 0.18);
+      outline: none;
+    }
+    .feedback-form-textarea {
+      min-height: 5.25rem;
+      resize: vertical;
+    }
+    @keyframes feedbackCardFloat {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+    @media (max-width: 640px) {
+      .feedback-form-card {
+        padding: 1.1rem 1.1rem;
+      }
+      .feedback-form-shell {
+        padding: 1rem;
+      }
+    }
+    @keyframes feedbackFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(26px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .footer-shell {
+      border-top: 1px solid #e5e7eb;
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(12px);
+      animation: footerFadeIn 0.65s ease both;
+    }
+    .footer-quote {
+      position: relative;
+      color: #374151;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .footer-quote::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.3rem;
+      height: 1px;
+      width: 100%;
+      transform: scaleX(0);
+      transform-origin: left;
+      background: linear-gradient(90deg, rgba(249, 115, 22, 0.5), rgba(239, 68, 68, 0.3));
+      transition: transform 0.3s ease;
+    }
+    .footer-quote:hover::after {
+      transform: scaleX(1);
+    }
+    .footer-copy {
+      color: #4b5563;
+      font-size: 0.875rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    @keyframes footerFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body class="bg-[#faf8f4] text-gray-800">
+{% set navbar_active = 'home' %}
+{% include 'partials/navbar.html' %}
+
+<section class="hero-shell px-6 md:px-10 xl:px-16 py-14 md:py-20 xl:py-24">
+  <div class="max-w-7xl mx-auto hero-grid">
+    <div class="hero-copy">
+      <span class="hero-kicker">
+        AI-Powered Skin Analysis
+      </span>
+
+      <h1 class="hero-title font-semibold">
+        Understand your skin with
+        <span class="hero-title-accent">clean AI guidance.</span>
+      </h1>
+
+      <p class="hero-description">
+        Get a focused skin analysis experience that feels simple and trustworthy. Upload your photo, detect visible concerns, and receive a personalized routine designed for everyday consistency.
+      </p>
+
+      <div class="hero-actions">
+        <a href="/analyze-skin" class="hero-primary-btn">
+          Start Skin Analysis
+        </a>
+        <a href="#how" class="hero-secondary-btn">
+          How It Works
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-image-wrap">
+      <div class="hero-image-card">
+        <img
+          class="hero-image"
+          src="{{ url_for('static', filename='images/ai-face-scan.png') }}"
+          alt="AI face scanning preview"
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="relative isolate min-h-screen overflow-hidden py-24 text-center">
+  <div
+    class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.58]"
+    style="background-image: url('{{ url_for('static', filename='images/before-after.png') }}');"
+  ></div>
+  <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.28)_0%,rgba(255,255,255,0.16)_34%,rgba(250,248,244,0.34)_100%)]"></div>
+  <div class="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#faf8f4]/55 to-transparent"></div>
+  <div class="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#f3f6f4]/62 to-transparent"></div>
+  <div class="relative z-10">
+    <h2 class="text-4xl md:text-5xl font-semibold text-[#112820] drop-shadow-[0_8px_24px_rgba(255,255,255,0.7)]">How It Works</h2>
+    <p class="mt-6 text-xl text-[#3f6470] drop-shadow-[0_6px_18px_rgba(255,255,255,0.7)]">Three simple steps to your perfect skincare routine</p>
+
+    <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto px-6">
+      <div class="text-center">
+        <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-[#2f9c6f] to-[#38b7a5] mx-auto flex items-center justify-center">
+          <svg class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 16V4"></path>
+            <path d="m6 10 6-6 6 6"></path>
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          </svg>
+        </div>
+        <p class="mt-8 text-[#24915d] font-semibold tracking-wide">STEP 1</p>
+        <h3 class="mt-4 text-4xl md:text-3xl font-semibold text-[#112820] leading-tight">Upload Photo</h3>
+        <p class="mt-4 text-xl text-[#4f6e75]">Upload a clear photo of your face</p>
+      </div>
+
+      <div class="text-center">
+        <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-[#2f9c6f] to-[#38b7a5] mx-auto flex items-center justify-center">
+          <svg class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 2 9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5L12 2z"></path>
+          </svg>
+        </div>
+        <p class="mt-8 text-[#24915d] font-semibold tracking-wide">STEP 2</p>
+        <h3 class="mt-4 text-4xl md:text-3xl font-semibold text-[#112820] leading-tight">AI Analysis</h3>
+        <p class="mt-4 text-xl text-[#4f6e75]">Our AI detects skin concerns and conditions</p>
+      </div>
+
+      <div class="text-center">
+        <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-[#2f9c6f] to-[#38b7a5] mx-auto flex items-center justify-center">
+          <svg class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="5" y="4" width="14" height="16" rx="2"></rect>
+            <path d="M9 2h6v4H9z"></path>
+            <path d="M9 10h6"></path>
+            <path d="M9 14h4"></path>
+          </svg>
+        </div>
+        <p class="mt-8 text-[#24915d] font-semibold tracking-wide">STEP 3</p>
+        <h3 class="mt-4 text-4xl md:text-3xl font-semibold text-[#112820] leading-tight">Get Routine</h3>
+        <p class="mt-4 text-xl text-[#4f6e75]">Receive a personalized morning &amp; night routine</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="relative py-24 text-center overflow-hidden">
+  <div
+    class="absolute inset-0 bg-center bg-cover opacity-45"
+    style="background-image: url('{{ url_for('static', filename='images/brands.png') }}');"
+    aria-hidden="true"
+  ></div>
+  <div class="absolute inset-0 bg-[#f3f6f4]/74" aria-hidden="true"></div>
+
+  <div class="relative z-10">
+  <h2 class="text-4xl md:text-5xl font-semibold text-[#112820]">Supported Brands</h2>
+  <p class="mt-6 text-xl text-[#4f6e75]">Curated routines from India's most loved skincare brands</p>
+
+  <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto px-6">
+    {% for brand in brand_cards %}
+    <div class="bg-[#f8fbf9]/92 backdrop-blur-sm border border-[#d9e4df] rounded-3xl p-10 shadow-[0_18px_40px_rgba(17,40,32,0.08)]">
+      <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center" style="background-color: {{ brand.accent }};">
+        <svg class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M11 20A7 7 0 0 1 11 6c0-2 2-4 4-4 0 8-3 10-7 10"></path>
+          <path d="M4 20c0-3.5 3-6 7-6"></path>
+        </svg>
+      </div>
+      <p class="mt-6 text-2xl md:text-xl text-[#112820]">{{ brand.name }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  </div>
+</section>
+
+<section class="feedback-showcase relative isolate flex min-h-screen items-center overflow-hidden px-6 py-24 md:px-10 xl:px-16">
+  <div class="feedback-showcase__image" aria-hidden="true"></div>
+  <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#faf8f4] to-transparent"></div>
+  <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#eff5f1] to-transparent"></div>
+  <div class="relative z-10 mx-auto w-full max-w-7xl">
+    <div class="max-w-3xl">
+      <p class="feedback-fade text-sm font-semibold uppercase tracking-[0.22em] text-[#4f7f63]">What Users Are Saying</p>
+      <h2 class="feedback-fade mt-5 text-4xl font-semibold leading-tight text-[#112820] md:text-6xl">Real Experiences, Real Results</h2>
+      <p class="feedback-fade mt-6 text-xl leading-8 text-[#587069]">Discover how people are transforming their skincare journey with SkinSmart.</p>
+      <p class="feedback-fade mt-4 max-w-2xl text-base leading-7 text-[#68827a]">Live feedback from our users—honest, instant, and constantly evolving.</p>
+    </div>
+
+    <div id="feedback-empty" class="feedback-fade mt-12 rounded-[30px] border border-dashed border-[#cfe1d7] bg-white/70 px-8 py-12 text-center text-[#587069] shadow-[0_18px_40px_rgba(17,40,32,0.06)] backdrop-blur-sm">
+      No feedback yet. Be the first to leave a review.
+    </div>
+
+    <div id="feedback-scroll" class="feedback-scroll relative mt-14 overflow-x-auto pb-6">
+      <div id="feedback-track" class="feedback-track flex gap-6 pr-6"></div>
+    </div>
+  </div>
+</section>
+
+<section class="feedback-form-shell px-4 sm:px-6">
+  <div class="feedback-form-card">
+    <div class="relative z-10 text-center">
+      <p class="inline-flex rounded-full border border-white/15 bg-white/12 px-4 py-2 text-sm font-semibold tracking-[0.01em] text-emerald-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">Glow Stories</p>
+      <h2 class="mt-4 text-4xl font-semibold leading-tight text-white md:text-5xl">Share your experience</h2>
+      <p class="mx-auto mt-3 max-w-2xl text-base leading-7 text-emerald-50/88 md:text-lg">Loved it? Tell us in seconds.</p>
+    </div>
+
+    <form id="feedback-form" class="relative z-10 mt-7 space-y-4">
+      <div>
+        <label for="feedback-name" class="mb-2 block text-sm font-semibold tracking-[0.01em] text-white">Name</label>
+        <input id="feedback-name" name="name" type="text" maxlength="255" required class="feedback-form-input px-4 py-3.5" placeholder="Your name">
+      </div>
+
+      <div>
+        <span id="feedback-rating-label" class="mb-3 block text-sm font-semibold tracking-[0.01em] text-white">Rating</span>
+        <div id="feedback-stars" class="flex flex-wrap gap-3" role="radiogroup" aria-labelledby="feedback-rating-label" aria-label="Choose a rating"></div>
+        <input id="feedback-rating" name="rating" type="hidden" value="0">
+      </div>
+
+      <div>
+        <label for="feedback-message" class="mb-2 block text-sm font-semibold tracking-[0.01em] text-white">Message</label>
+        <textarea id="feedback-message" name="message" rows="5" required class="feedback-form-textarea px-4 py-3.5" placeholder="What did you enjoy about the experience?"></textarea>
+      </div>
+
+      <div class="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">
+        <p id="feedback-status" class="text-sm text-emerald-50/90" aria-live="polite"></p>
+        <button id="feedback-submit" type="submit" class="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-emerald-400 to-green-600 px-8 py-3.5 font-semibold text-white shadow-[0_18px_36px_rgba(16,185,129,0.32)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_24px_44px_rgba(16,185,129,0.42)] focus:outline-none focus:ring-4 focus:ring-emerald-300/40">Submit Feedback</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer class="footer-shell px-5 py-3 md:px-10">
+  <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 text-center md:flex-row md:gap-6 md:text-left">
+    <a
+      href="{{ url_for('home') }}"
+      class="group inline-flex items-center gap-3 rounded-full pr-3 text-[#163227] transition-transform duration-300 ease-in-out hover:-translate-y-0.5"
+      aria-label="SkinSmart home"
+    >
+      <span class="relative inline-flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#1f7a58] via-[#2f9c6f] to-[#7dd3a7] text-white shadow-[0_12px_28px_-14px_rgba(47,156,111,0.9)] ring-1 ring-white/70 transition-all duration-300 ease-in-out group-hover:scale-105 group-hover:-rotate-3 group-hover:shadow-[0_18px_36px_-16px_rgba(47,156,111,0.95)]">
+        <span class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.45),transparent_55%)] opacity-80"></span>
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M11 20A7 7 0 0 1 11 6c0-2 2-4 4-4 0 8-3 10-7 10"></path>
+          <path d="M4 20c0-3.5 3-6 7-6"></path>
+        </svg>
+      </span>
+      <span class="font-['Playfair_Display'] text-[1.6rem] font-semibold leading-none tracking-[-0.03em] text-[#173128] md:text-[1.8rem]">
+        SkinSmart
+      </span>
+    </a>
+
+    <a href="{{ url_for('analyze_skin') }}" class="footer-quote">Start analyzing your skin in seconds.</a>
+
+    <p class="footer-copy">&copy; 2026 SkinSmart</p>
+  </div>
+</footer>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("feedback-form");
+    const nameInput = document.getElementById("feedback-name");
+    const messageInput = document.getElementById("feedback-message");
+    const ratingInput = document.getElementById("feedback-rating");
+    const starsContainer = document.getElementById("feedback-stars");
+    const submitButton = document.getElementById("feedback-submit");
+    const statusText = document.getElementById("feedback-status");
+    const feedbackTrack = document.getElementById("feedback-track");
+    const feedbackEmpty = document.getElementById("feedback-empty");
+    const feedbackScroll = document.getElementById("feedback-scroll");
+
+	    let selectedRating = 0;
+	    let hoveredRating = 0;
+	    let feedbackItems = [];
+	    let autoScrollFrame = null;
+	    let isTrackPaused = false;
+
+	    const setStatus = (message, isError = false) => {
+	      statusText.textContent = message;
+	      statusText.classList.toggle("text-amber-200", isError);
+	      statusText.classList.toggle("text-emerald-50/90", !isError);
+	    };
+
+    const updateEmptyState = () => {
+      feedbackEmpty.classList.toggle("hidden", feedbackItems.length > 0);
+    };
+
+	    const createStarButtons = () => {
+	      starsContainer.innerHTML = "";
+	      for (let rating = 1; rating <= 5; rating += 1) {
+	        const button = document.createElement("button");
+	        button.type = "button";
+	        button.dataset.rating = String(rating);
+	        button.className = "feedback-star inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/25 bg-white/12 text-2xl text-white/55 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-emerald-300/25";
+	        button.setAttribute("role", "radio");
+	        button.setAttribute("aria-checked", "false");
+	        button.setAttribute("aria-label", `Rate ${rating} star${rating > 1 ? "s" : ""}`);
+	        button.textContent = String.fromCharCode(9733);
+	        button.addEventListener("mouseenter", () => {
+	          hoveredRating = rating;
+	          paintStars();
+	        });
+	        button.addEventListener("focus", () => {
+	          hoveredRating = rating;
+	          paintStars();
+	        });
+	        button.addEventListener("mouseleave", () => {
+	          hoveredRating = 0;
+	          paintStars();
+	        });
+	        button.addEventListener("blur", () => {
+	          hoveredRating = 0;
+	          paintStars();
+	        });
+	        button.addEventListener("click", () => {
+	          selectedRating = rating;
+	          ratingInput.value = String(rating);
+	          hoveredRating = 0;
+	          paintStars();
+	        });
+	        starsContainer.appendChild(button);
+	      }
+	      paintStars();
+	    };
+
+	    const paintStars = () => {
+	      Array.from(starsContainer.children).forEach((star, index) => {
+	        const rating = index + 1;
+	        const previewRating = hoveredRating || selectedRating;
+	        star.classList.toggle("is-hover", hoveredRating > 0 && rating <= hoveredRating);
+	        star.classList.toggle("is-active", rating <= previewRating);
+	        star.setAttribute("aria-checked", rating === selectedRating ? "true" : "false");
+	      });
+	    };
+
+    const buildStars = (rating) => String.fromCodePoint(11088).repeat(Math.max(0, Math.min(5, Number(rating) || 0)));
+
+    const feedbackCardMarkup = (item) => {
+      const card = document.createElement("article");
+      card.className = "feedback-fade min-w-[280px] max-w-[320px] flex-none rounded-2xl border border-white/75 bg-white/68 p-6 shadow-[0_20px_48px_rgba(17,40,32,0.1)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_28px_58px_rgba(17,40,32,0.16)]";
+
+      const header = document.createElement("div");
+      header.className = "flex items-start justify-between gap-4";
+
+      const identity = document.createElement("div");
+      const name = document.createElement("h4");
+      name.className = "text-lg font-semibold text-[#173128]";
+      name.textContent = item.name;
+      const stars = document.createElement("p");
+      stars.className = "mt-3 text-sm tracking-[0.12em]";
+      stars.textContent = buildStars(item.rating);
+      identity.append(name, stars);
+
+      const badge = document.createElement("div");
+      badge.className = "rounded-full bg-[#eef6f1] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#4f7f63]";
+      badge.textContent = `${item.rating}/5`;
+
+      const message = document.createElement("p");
+      message.className = "mt-5 text-sm leading-7 text-[#587069]";
+      message.textContent = item.message;
+
+      header.append(identity, badge);
+      card.append(header, message);
+      return card;
+    };
+
+    const renderFeedbackTrack = () => {
+      feedbackTrack.innerHTML = "";
+
+      if (!feedbackItems.length) {
+        feedbackScroll.scrollLeft = 0;
+        updateEmptyState();
+        return;
+      }
+
+      const repeatedItems = feedbackItems.length > 1 ? [...feedbackItems, ...feedbackItems] : [...feedbackItems];
+      repeatedItems.forEach((item) => {
+        feedbackTrack.appendChild(feedbackCardMarkup(item));
+      });
+
+      updateEmptyState();
+    };
+
+    const prependFeedback = (item) => {
+      feedbackItems = [item, ...feedbackItems.filter((entry) => entry.id !== item.id)];
+      renderFeedbackTrack();
+      feedbackScroll.scrollTo({ left: 0, behavior: "smooth" });
+    };
+
+    const renderFeedback = (items) => {
+      feedbackItems = Array.isArray(items) ? items : [];
+      renderFeedbackTrack();
+    };
+
+    const animateFeedbackTrack = () => {
+      if (!isTrackPaused && feedbackItems.length > 1) {
+        const loopPoint = feedbackTrack.scrollWidth / 2;
+        if (loopPoint > 0) {
+          feedbackScroll.scrollLeft += 0.45;
+          if (feedbackScroll.scrollLeft >= loopPoint) {
+            feedbackScroll.scrollLeft = 0;
+          }
+        }
+      }
+
+      autoScrollFrame = window.requestAnimationFrame(animateFeedbackTrack);
+    };
+
+    const startAutoScroll = () => {
+      if (autoScrollFrame) {
+        window.cancelAnimationFrame(autoScrollFrame);
+      }
+      autoScrollFrame = window.requestAnimationFrame(animateFeedbackTrack);
+    };
+
+    const stopAutoScroll = () => {
+      if (autoScrollFrame) {
+        window.cancelAnimationFrame(autoScrollFrame);
+        autoScrollFrame = null;
+      }
+    };
+
+    const loadFeedback = async () => {
+      try {
+        const response = await fetch("/get_feedback");
+        if (!response.ok) {
+          throw new Error("Could not load feedback.");
+        }
+        const items = await response.json();
+        renderFeedback(items);
+      } catch (_error) {
+        setStatus("Could not load feedback right now.", true);
+      }
+    };
+
+    const resetForm = () => {
+      form.reset();
+      selectedRating = 0;
+      ratingInput.value = "0";
+      paintStars();
+    };
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!selectedRating) {
+        setStatus("Please choose a star rating before submitting.", true);
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.classList.add("opacity-70", "cursor-not-allowed");
+      setStatus("Submitting feedback...");
+
+      try {
+        const response = await fetch("/submit_feedback", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: nameInput.value.trim(),
+            message: messageInput.value.trim(),
+            rating: selectedRating,
+          }),
+        });
+
+        const payload = await response.json();
+        if (!response.ok || !payload.success) {
+          throw new Error(payload.error || "Could not submit feedback.");
+        }
+
+        resetForm();
+        setStatus("Thanks! Your feedback is now live.");
+      } catch (error) {
+        setStatus(error.message || "Could not submit feedback.", true);
+      } finally {
+        submitButton.disabled = false;
+        submitButton.classList.remove("opacity-70", "cursor-not-allowed");
+      }
+    });
+
+    feedbackScroll.addEventListener("mouseenter", () => {
+      isTrackPaused = true;
+    });
+
+    feedbackScroll.addEventListener("mouseleave", () => {
+      isTrackPaused = false;
+    });
+
+    feedbackScroll.addEventListener("touchstart", () => {
+      isTrackPaused = true;
+    }, { passive: true });
+
+    feedbackScroll.addEventListener("touchend", () => {
+      isTrackPaused = false;
+    }, { passive: true });
+
+    createStarButtons();
+    loadFeedback().finally(() => {
+      startAutoScroll();
+    });
+
+    const socket = io();
+    socket.on("new_feedback", (item) => {
+      prependFeedback(item);
+    });
+
+    window.addEventListener("beforeunload", () => {
+      stopAutoScroll();
+    });
+  });
+</script>
+</body>
+</html>
+

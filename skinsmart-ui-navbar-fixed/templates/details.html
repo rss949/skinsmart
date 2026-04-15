@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Details | SkinSmart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="relative min-h-screen overflow-x-hidden bg-[#faf8f4] font-['Inter'] text-gray-800">
+<div
+  class="pointer-events-none fixed inset-0 -z-10 bg-center bg-cover bg-no-repeat opacity-45"
+  style="background-image: url('{{ url_for('static', filename='images/brands.png') }}');"
+  aria-hidden="true"
+></div>
+<div class="pointer-events-none fixed inset-0 -z-10 bg-[#f3f6f4]/74" aria-hidden="true"></div>
+{% set navbar_active = 'analyze' %}
+{% set navbar_hide_primary_cta = true %}
+{% include 'partials/navbar.html' %}
+
+<div class="max-w-2xl mx-auto mt-16 bg-white rounded-2xl p-10 shadow">
+  <h1 class="text-3xl font-serif text-center mb-3">Tell Us About Your Skin</h1>
+  <p class="text-center text-gray-500 mb-8">
+    This helps us personalize your routine.
+  </p>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="mb-4 text-sm font-medium text-red-600 text-center">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" class="space-y-6">
+    <div>
+      <label for="age" class="block text-sm font-medium text-gray-700 mb-2">
+        Age
+      </label>
+      <input
+        id="age"
+        name="age"
+        type="number"
+        min="18"
+        max="50"
+        required
+        placeholder="Enter your age (18-50)"
+        value=""
+        class="w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#4f7f63]"
+      >
+      <p class="text-xs text-gray-500 mt-1">Age must be between 18 and 50.</p>
+    </div>
+
+    <div>
+      <label for="skin_type" class="block text-sm font-medium text-gray-700 mb-2">
+        Skin Type
+      </label>
+      <select
+        id="skin_type"
+        name="skin_type"
+        required
+        class="w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#4f7f63]"
+      >
+        <option value="">Select skin type</option>
+        <option value="Oily">Oily</option>
+        <option value="Dry">Dry</option>
+        <option value="Combination">Combination</option>
+        <option value="Normal">Normal</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="preferred_brand" class="block text-sm font-medium text-gray-700 mb-2">
+        Preferred Brand
+      </label>
+      <select
+        id="preferred_brand"
+        name="preferred_brand"
+        required
+        class="w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#4f7f63]"
+      >
+        <option value="">Select preferred brand</option>
+        {% for brand in all_brands %}
+        <option value="{{ brand }}">{{ brand }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button
+      type="submit"
+      class="w-full bg-[#4f7f63] text-white py-3 rounded-xl font-medium hover:bg-[#426b54] transition"
+    >
+      Generate My Routine
+    </button>
+  </form>
+</div>
+
+<footer class="px-6 py-6 text-center text-sm text-gray-500">
+  AI-based skincare suggestions only. Not a medical diagnosis.
+</footer>
+</body>
+</html>

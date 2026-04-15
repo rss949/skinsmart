@@ -1,0 +1,250 @@
+<header
+  id="site-header"
+  class="sticky top-0 z-50 w-full pt-4"
+>
+  <div
+    id="site-header-shell"
+    class="w-full translate-y-[-16px] rounded-none border border-white/55 bg-white/55 px-4 py-3 opacity-0 shadow-[0_20px_45px_-24px_rgba(15,23,42,0.22)] backdrop-blur-xl transition-all duration-300 ease-in-out md:px-6 lg:px-8"
+  >
+    <div class="flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        {% if navbar_active != 'home' %}
+          <button
+            type="button"
+            onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href='{{ url_for('home') }}'; }"
+            class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/60 bg-white/65 text-[#173128] shadow-[0_10px_24px_-16px_rgba(15,23,42,0.45)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:border-[#9fc7ae] hover:text-[#1f7a58] hover:shadow-[0_18px_32px_-18px_rgba(31,122,88,0.45)]"
+            aria-label="Go back"
+          >
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 18l-6-6 6-6"></path>
+            </svg>
+          </button>
+        {% endif %}
+
+        <a
+          href="{{ url_for('home') }}"
+          class="group inline-flex items-center gap-3 rounded-full pr-3 text-[#163227] transition-transform duration-300 ease-in-out hover:-translate-y-0.5"
+          aria-label="SkinSmart home"
+        >
+          <span class="relative inline-flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#1f7a58] via-[#2f9c6f] to-[#7dd3a7] text-white shadow-[0_12px_28px_-14px_rgba(47,156,111,0.9)] ring-1 ring-white/70 transition-all duration-300 ease-in-out group-hover:scale-105 group-hover:-rotate-3 group-hover:shadow-[0_18px_36px_-16px_rgba(47,156,111,0.95)]"
+          >
+            <span class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.45),transparent_55%)] opacity-80"></span>
+            <svg class="relative z-10 h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M11 20A7 7 0 0 1 11 6c0-2 2-4 4-4 0 8-3 10-7 10"></path>
+              <path d="M4 20c0-3.5 3-6 7-6"></path>
+            </svg>
+          </span>
+          <span class="font-['Playfair_Display'] text-[1.6rem] font-semibold leading-none tracking-[-0.03em] text-[#173128] md:text-[1.8rem]">
+            SkinSmart
+          </span>
+        </a>
+      </div>
+
+      {% set nav_items = [
+        {'label': 'Home', 'href': url_for('home'), 'key': 'home'},
+        {'label': 'Analyze Skin', 'href': url_for('analyze_skin'), 'key': 'analyze'},
+        {'label': 'History', 'href': url_for('history'), 'key': 'history', 'auth_only': true}
+      ] %}
+
+      <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
+        {% for item in nav_items %}
+          {% if (not item.get('auth_only') or session.get('user_id')) and (not item.get('home_only') or navbar_active == 'home') %}
+            {% set is_active = navbar_active == item['key'] %}
+            <a
+              href="{{ item['href'] }}"
+              class="group relative inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold tracking-[0.01em] transition-all duration-300 ease-in-out {% if is_active %}bg-[#eff8f1] text-[#1f7a58] shadow-[0_0_0_1px_rgba(79,127,99,0.12),0_10px_24px_-18px_rgba(47,156,111,0.8)]{% else %}text-[#29473a]/82 hover:-translate-y-0.5 hover:text-[#1f7a58]{% endif %}"
+            >
+              <span>{{ item['label'] }}</span>
+              <span class="pointer-events-none absolute inset-x-4 bottom-1.5 h-0.5 origin-left rounded-full bg-gradient-to-r from-[#1f7a58] via-[#4f7f63] to-[#8bd3af] transition-transform duration-300 ease-in-out {% if is_active %}scale-x-100 shadow-[0_0_14px_rgba(79,127,99,0.45)]{% else %}scale-x-0 group-hover:scale-x-100{% endif %}"></span>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </nav>
+
+      <div class="hidden items-center gap-3 lg:flex">
+        {% if session.get('user_id') %}
+          <div class="hidden rounded-full border border-white/60 bg-white/55 px-4 py-2 text-right shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] xl:block">
+            <p class="max-w-[240px] truncate text-sm font-semibold text-[#1f3b2f]">
+              {{ session.get("user_name", "") }}
+            </p>
+            {% if session.get("user_email") %}
+              <p class="max-w-[240px] truncate text-xs text-[#557567]">
+                {{ session.get("user_email") }}
+              </p>
+            {% endif %}
+          </div>
+          <a
+            href="{{ url_for('logout') }}"
+            class="group relative inline-flex items-center overflow-hidden rounded-full border border-[#8db39d] px-5 py-2.5 text-sm font-semibold text-[#244634] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:border-[#4f7f63] hover:text-white hover:shadow-[0_16px_30px_-18px_rgba(31,122,88,0.7)]"
+          >
+            <span class="absolute inset-0 origin-left scale-x-0 bg-[#1f7a58] transition-transform duration-300 ease-in-out group-hover:scale-x-100"></span>
+            <span class="relative z-10">Logout</span>
+          </a>
+          {% if not navbar_hide_primary_cta|default(false) %}
+            <a
+              href="{{ url_for('analyze_skin') }}"
+              class="inline-flex items-center rounded-full bg-gradient-to-r from-[#1f7a58] via-[#2f9c6f] to-[#64bb8e] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_16px_34px_-18px_rgba(31,122,88,0.95)] transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-[0_22px_40px_-18px_rgba(31,122,88,0.9)]"
+            >
+              Start Analysis
+            </a>
+          {% endif %}
+        {% else %}
+          <a
+            href="{{ url_for('login') }}"
+            class="group relative inline-flex items-center overflow-hidden rounded-full border border-[#8db39d] px-5 py-2.5 text-sm font-semibold text-[#244634] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:border-[#4f7f63] hover:text-white hover:shadow-[0_16px_30px_-18px_rgba(31,122,88,0.7)]"
+          >
+            <span class="absolute inset-0 origin-left scale-x-0 bg-[#1f7a58] transition-transform duration-300 ease-in-out group-hover:scale-x-100"></span>
+            <span class="relative z-10">Login</span>
+          </a>
+          <a
+            href="{{ url_for('signup') }}"
+            class="inline-flex items-center rounded-full bg-gradient-to-r from-[#1f7a58] via-[#2f9c6f] to-[#64bb8e] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_16px_34px_-18px_rgba(31,122,88,0.95)] transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-[0_22px_40px_-18px_rgba(31,122,88,0.9)]"
+          >
+            Sign Up
+          </a>
+        {% endif %}
+      </div>
+
+      <button
+        id="mobile-menu-button"
+        type="button"
+        class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/60 bg-white/65 text-[#173128] shadow-[0_10px_24px_-16px_rgba(15,23,42,0.45)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:border-[#9fc7ae] hover:text-[#1f7a58] hover:shadow-[0_18px_32px_-18px_rgba(31,122,88,0.45)] lg:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Toggle navigation menu"
+      >
+        <span class="relative h-5 w-5">
+          <span id="mobile-line-1" class="absolute left-0 top-0.5 h-0.5 w-5 rounded-full bg-current transition-all duration-300 ease-in-out"></span>
+          <span id="mobile-line-2" class="absolute left-0 top-2.5 h-0.5 w-5 rounded-full bg-current transition-all duration-300 ease-in-out"></span>
+          <span id="mobile-line-3" class="absolute left-0 top-4.5 h-0.5 w-5 rounded-full bg-current transition-all duration-300 ease-in-out"></span>
+        </span>
+      </button>
+    </div>
+
+    <div
+      id="mobile-menu"
+      class="pointer-events-none max-h-0 overflow-hidden opacity-0 transition-all duration-300 ease-in-out lg:hidden"
+    >
+      <div class="mt-4 space-y-3 border-t border-white/50 pt-4">
+        <nav class="grid gap-2" aria-label="Mobile primary">
+          {% for item in nav_items %}
+            {% if (not item.get('auth_only') or session.get('user_id')) and (not item.get('home_only') or navbar_active == 'home') %}
+              {% set is_active = navbar_active == item['key'] %}
+              <a
+                href="{{ item['href'] }}"
+                class="group relative flex items-center justify-between rounded-2xl border px-4 py-3 text-sm font-semibold transition-all duration-300 ease-in-out {% if is_active %}border-[#b9ddc7] bg-[#eff8f1] text-[#1f7a58] shadow-[0_16px_30px_-24px_rgba(31,122,88,0.8)]{% else %}border-white/60 bg-white/55 text-[#29473a] hover:-translate-y-0.5 hover:border-[#b9ddc7] hover:bg-[#f5fbf6] hover:text-[#1f7a58]{% endif %}"
+              >
+                <span>{{ item['label'] }}</span>
+                <span class="h-2 w-2 rounded-full bg-[#79bf97] transition-all duration-300 {% if is_active %}opacity-100 shadow-[0_0_12px_rgba(79,127,99,0.6)]{% else %}opacity-0 group-hover:opacity-100{% endif %}"></span>
+              </a>
+            {% endif %}
+          {% endfor %}
+        </nav>
+
+        {% if session.get('user_id') %}
+          <div class="rounded-2xl border border-white/60 bg-white/60 px-4 py-3">
+            <p class="text-sm font-semibold text-[#1f3b2f]">{{ session.get("user_name", "") }}</p>
+            {% if session.get("user_email") %}
+              <p class="mt-1 text-xs text-[#557567]">{{ session.get("user_email") }}</p>
+            {% endif %}
+          </div>
+          <div class="grid gap-2 pb-1">
+            {% if not navbar_hide_primary_cta|default(false) %}
+              <a
+                href="{{ url_for('analyze_skin') }}"
+                class="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-[#1f7a58] via-[#2f9c6f] to-[#64bb8e] px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_34px_-18px_rgba(31,122,88,0.95)] transition-all duration-300 ease-in-out hover:-translate-y-0.5"
+              >
+                Start Analysis
+              </a>
+            {% endif %}
+            <a
+              href="{{ url_for('logout') }}"
+              class="inline-flex items-center justify-center rounded-2xl border border-[#8db39d] px-5 py-3 text-sm font-semibold text-[#244634] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:border-[#4f7f63] hover:bg-[#eef7f0]"
+            >
+              Logout
+            </a>
+          </div>
+        {% else %}
+          <div class="grid gap-2 pb-1">
+            <a
+              href="{{ url_for('login') }}"
+              class="inline-flex items-center justify-center rounded-2xl border border-[#8db39d] px-5 py-3 text-sm font-semibold text-[#244634] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:border-[#4f7f63] hover:bg-[#eef7f0]"
+            >
+              Login
+            </a>
+            <a
+              href="{{ url_for('signup') }}"
+              class="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-[#1f7a58] via-[#2f9c6f] to-[#64bb8e] px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_34px_-18px_rgba(31,122,88,0.95)] transition-all duration-300 ease-in-out hover:-translate-y-0.5"
+            >
+              Sign Up
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const header = document.getElementById("site-header");
+    const shell = document.getElementById("site-header-shell");
+    const menuButton = document.getElementById("mobile-menu-button");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const line1 = document.getElementById("mobile-line-1");
+    const line2 = document.getElementById("mobile-line-2");
+    const line3 = document.getElementById("mobile-line-3");
+    let menuOpen = false;
+
+    const applyScrollState = () => {
+      const scrolled = window.scrollY > 18;
+
+      header.classList.toggle("pt-4", !scrolled);
+      header.classList.toggle("pt-2", scrolled);
+
+      shell.classList.toggle("bg-white/55", !scrolled);
+      shell.classList.toggle("border-white/55", !scrolled);
+      shell.classList.toggle("shadow-[0_20px_45px_-24px_rgba(15,23,42,0.22)]", !scrolled);
+      shell.classList.toggle("py-3", !scrolled);
+
+      shell.classList.toggle("bg-white/80", scrolled);
+      shell.classList.toggle("border-[#dbeadf]", scrolled);
+      shell.classList.toggle("shadow-[0_24px_60px_-28px_rgba(15,23,42,0.32)]", scrolled);
+      shell.classList.toggle("py-2.5", scrolled);
+    };
+
+    const setMenuState = (open) => {
+      menuOpen = open;
+      menuButton.setAttribute("aria-expanded", open ? "true" : "false");
+
+      mobileMenu.classList.toggle("pointer-events-none", !open);
+      mobileMenu.classList.toggle("max-h-0", !open);
+      mobileMenu.classList.toggle("opacity-0", !open);
+      mobileMenu.classList.toggle("max-h-[32rem]", open);
+      mobileMenu.classList.toggle("opacity-100", open);
+
+      line1.classList.toggle("translate-y-2", open);
+      line1.classList.toggle("rotate-45", open);
+      line2.classList.toggle("opacity-0", open);
+      line3.classList.toggle("-translate-y-2", open);
+      line3.classList.toggle("-rotate-45", open);
+    };
+
+    requestAnimationFrame(() => {
+      shell.classList.remove("translate-y-[-16px]", "opacity-0");
+    });
+
+    applyScrollState();
+    window.addEventListener("scroll", applyScrollState, { passive: true });
+
+    menuButton.addEventListener("click", () => {
+      setMenuState(!menuOpen);
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 1024 && menuOpen) {
+        setMenuState(false);
+      }
+    });
+  });
+</script>

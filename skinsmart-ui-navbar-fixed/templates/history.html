@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>History | SkinSmart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-[#faf8f4] font-['Inter'] text-gray-800">
+{% set navbar_active = 'history' %}
+{% include 'partials/navbar.html' %}
+
+<div class="max-w-6xl mx-auto mt-12 mb-10">
+  <div class="bg-white rounded-2xl p-8 shadow">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h1 class="text-3xl font-serif mb-2">Analysis History</h1>
+        <p class="text-gray-600">Your saved skin concerns and recommended skincare routines.</p>
+      </div>
+      {% if entries %}
+        <form method="POST" action="/history/delete-all">
+          <button
+            type="submit"
+            onclick="return confirm('Delete all history entries? This cannot be undone.')"
+            class="inline-block bg-red-600 text-white px-5 py-2.5 rounded-lg hover:bg-red-700 transition"
+          >
+            Delete All History
+          </button>
+        </form>
+      {% endif %}
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mt-6 space-y-2">
+          {% for category, message in messages %}
+            <div class="rounded-xl px-4 py-3 text-sm font-medium {% if category == 'success' %}bg-emerald-50 text-emerald-700 border border-emerald-200{% else %}bg-red-50 text-red-700 border border-red-200{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% if not entries %}
+      <div class="mt-8 text-center bg-[#f6faf7] border border-[#d8e7de] rounded-xl p-10">
+        <p class="text-gray-700">No history yet. Run your first skin analysis to save recommendations.</p>
+        <a
+          href="/analyze-skin"
+          class="inline-block mt-5 bg-[#4f7f63] text-white px-8 py-3 rounded-xl hover:bg-[#426b54] transition"
+        >
+          Start New Analysis
+        </a>
+      </div>
+    {% else %}
+      <div class="mt-8 space-y-6">
+        {% for entry in entries %}
+          <article class="border border-[#e2ebe5] rounded-2xl p-6 bg-[#fcfdfc]">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p class="text-sm text-gray-500">Saved on {{ entry.created_at }}</p>
+                <h2 class="text-xl font-semibold text-[#1f3c2f] mt-1">
+                  Detected Concern: {{ entry.detected_concern }}
+                </h2>
+                <p class="text-sm text-gray-600 mt-1">
+                  Age: {{ entry.age or "-" }} | Skin Type: {{ entry.skin_type or "-" }} | Brand: {{ entry.selected_brand or "-" }}
+                </p>
+              </div>
+              <div class="flex items-center gap-2">
+                <a
+                  href="/history/download/{{ entry.id }}"
+                  class="inline-block bg-[#4f7f63] text-white px-5 py-2.5 rounded-lg hover:bg-[#426b54] transition"
+                >
+                  Download PDF
+                </a>
+                <form method="POST" action="/history/delete/{{ entry.id }}">
+                  <button
+                    type="submit"
+                    onclick="return confirm('Delete this history entry? This cannot be undone.')"
+                    class="inline-block bg-red-600 text-white px-5 py-2.5 rounded-lg hover:bg-red-700 transition"
+                  >
+                    Delete
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4 mt-5">
+              <div class="bg-white border border-[#e6ece8] rounded-xl p-4">
+                <h3 class="font-semibold text-[#315644] mb-3">Morning Routine</h3>
+                <ul class="space-y-2 text-sm text-gray-700">
+                  {% for item in entry.routine.get("morning", []) %}
+                    <li>{{ item.display_step }}: {{ item.product }} ({{ item.brand }})</li>
+                  {% endfor %}
+                </ul>
+              </div>
+              <div class="bg-white border border-[#e6ece8] rounded-xl p-4">
+                <h3 class="font-semibold text-[#315644] mb-3">Evening Routine</h3>
+                <ul class="space-y-2 text-sm text-gray-700">
+                  {% for item in entry.routine.get("evening", []) %}
+                    <li>{{ item.display_step }}: {{ item.product }} ({{ item.brand }})</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<footer class="px-6 py-6 text-center text-sm text-gray-500">
+  AI-based skincare suggestions only. Not a medical diagnosis.
+</footer>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Results | SkinSmart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-[#faf8f4] font-['Inter'] text-gray-800">
+{% set navbar_active = 'analyze' %}
+{% set navbar_hide_primary_cta = true %}
+{% include 'partials/navbar.html' %}
+
+<div class="w-full mt-12 mb-10 bg-white px-6 py-8 shadow sm:px-8 lg:px-12 xl:px-16">
+  <h1 class="text-4xl font-serif text-center mb-3">Your Personalized Skincare Routine</h1>
+  <p class="text-center text-gray-600 mb-8">
+    Concern: <span class="font-semibold text-gray-800">{{ session.get("skin_concern", "Clear Skin") }}</span>
+    <br>
+    Skin Type: <span class="font-semibold text-gray-800">{{ session.get("skin_type", routine.skin_type or "-") }}</span>
+    <br>
+    Age: <span class="font-semibold text-gray-800">{{ session.get("age", "-") }}</span>
+  </p>
+
+  <div class="max-w-3xl mx-auto mb-8 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm leading-6 text-amber-900">
+    <p class="font-semibold uppercase tracking-wide text-amber-800">Disclaimer</p>
+    <p class="mt-2">
+      This AI tool gives general skincare advice, not medical diagnosis.
+      If your skin problem is serious or not improving, please consult a dermatologist.
+    </p>
+  </div>
+
+  <div class="max-w-xl mx-auto bg-[#f3f8f5] rounded-xl p-4 border border-[#dce9e1] mb-10">
+    <form method="GET" action="{{ url_for('results') }}" class="flex gap-3 items-end flex-wrap">
+      <div class="flex-1 min-w-[220px]">
+        <label for="brand" class="block text-sm text-gray-600 mb-1">Want to change brand?</label>
+        <select id="brand" name="brand" class="w-full border rounded-lg px-3 py-2 bg-white">
+          {% for brand in all_brands %}
+            <option value="{{ brand }}" {% if brand == routine.selected_brand %}selected{% endif %}>
+              {{ brand }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="bg-[#4f7f63] text-white px-5 py-2 rounded-lg hover:bg-[#426b54] transition">
+        Update Brand
+      </button>
+    </form>
+  </div>
+
+  <section>
+    <h2 class="text-2xl font-semibold text-[#4f7f63] mb-4">Morning Routine</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {% for item in routine.morning %}
+        <article class="border rounded-xl overflow-hidden bg-[#fbfcfb]">
+          <img
+            src="{{ item.display_image_url }}"
+            alt="{{ item.product }}"
+            class="w-full h-44 object-contain bg-white"
+            onerror="if (this.dataset.tryRaw !== '1') { this.dataset.tryRaw='1'; this.src='{{ item.image_url }}'; } else if (this.dataset.tryAppProxy !== '1') { this.dataset.tryAppProxy='1'; this.src='{{ item.app_proxy_url }}'; } else if (this.dataset.tryProxy !== '1') { this.dataset.tryProxy='1'; this.src='{{ item.image_proxy_url }}'; } else if (this.dataset.tryLocal !== '1') { this.dataset.tryLocal='1'; this.src='{{ item.local_preview_url }}'; } else if (this.dataset.tryFallback !== '1') { this.dataset.tryFallback='1'; this.src='{{ item.fallback_image_url }}'; } else { this.onerror=null; }"
+          >
+          <div class="p-4">
+            <p class="text-xs uppercase tracking-wide text-gray-500">{{ item.step }} - {{ item.display_step }}</p>
+            <h3 class="mt-1 font-semibold text-gray-800">{{ item.product }}</h3>
+            <p class="text-sm text-gray-600">{{ item.brand }}</p>
+            <p class="mt-2 text-[#1f7a4f] font-bold">Rs {{ item.price_inr }}</p>
+            {% if item.price_source != "live" %}
+              <p class="text-xs text-gray-500 mt-1">Price may vary on store.</p>
+            {% endif %}
+            <a href="{{ item.buy_url }}" target="_blank" rel="noopener noreferrer"
+               class="inline-block mt-3 text-sm bg-[#e7f3ec] text-[#1f7a4f] px-3 py-1.5 rounded-md">
+              View Product
+            </a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="mt-10">
+    <h2 class="text-2xl font-semibold text-[#4f7f63] mb-4">Evening Routine</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {% for item in routine.evening %}
+        <article class="border rounded-xl overflow-hidden bg-[#fbfcfb]">
+          <img
+            src="{{ item.display_image_url }}"
+            alt="{{ item.product }}"
+            class="w-full h-44 object-contain bg-white"
+            onerror="if (this.dataset.tryRaw !== '1') { this.dataset.tryRaw='1'; this.src='{{ item.image_url }}'; } else if (this.dataset.tryAppProxy !== '1') { this.dataset.tryAppProxy='1'; this.src='{{ item.app_proxy_url }}'; } else if (this.dataset.tryProxy !== '1') { this.dataset.tryProxy='1'; this.src='{{ item.image_proxy_url }}'; } else if (this.dataset.tryLocal !== '1') { this.dataset.tryLocal='1'; this.src='{{ item.local_preview_url }}'; } else if (this.dataset.tryFallback !== '1') { this.dataset.tryFallback='1'; this.src='{{ item.fallback_image_url }}'; } else { this.onerror=null; }"
+          >
+          <div class="p-4">
+            <p class="text-xs uppercase tracking-wide text-gray-500">{{ item.step }} - {{ item.display_step }}</p>
+            <h3 class="mt-1 font-semibold text-gray-800">{{ item.product }}</h3>
+            <p class="text-sm text-gray-600">{{ item.brand }}</p>
+            <p class="mt-2 text-[#1f7a4f] font-bold">Rs {{ item.price_inr }}</p>
+            {% if item.price_source != "live" %}
+              <p class="text-xs text-gray-500 mt-1">Price may vary on store.</p>
+            {% endif %}
+            <a href="{{ item.buy_url }}" target="_blank" rel="noopener noreferrer"
+               class="inline-block mt-3 text-sm bg-[#e7f3ec] text-[#1f7a4f] px-3 py-1.5 rounded-md">
+              View Product
+            </a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="text-center mt-8">
+    <a href="/analyze-skin" class="inline-block bg-[#4f7f63] text-white px-8 py-3 rounded-xl hover:bg-[#426b54] transition">
+      Analyze Another Photo
+    </a>
+  </div>
+</div>
+
+<footer class="px-6 py-6 text-center text-sm text-gray-500">
+  AI-based skincare suggestions only. Not a medical diagnosis.
+</footer>
+</body>
+</html>

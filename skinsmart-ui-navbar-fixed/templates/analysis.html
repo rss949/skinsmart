@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analysis | SkinSmart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-[#faf8f4] font-['Inter'] text-gray-800">
+{% set navbar_active = 'analyze' %}
+{% include 'partials/navbar.html' %}
+
+<div class="mx-auto mt-20 max-w-3xl rounded-3xl bg-white p-12 text-center shadow-[0_25px_60px_-32px_rgba(15,23,42,0.28)]">
+  <div class="mb-4 text-5xl" aria-hidden="true">OK</div>
+  <h2 class="mb-2 font-['Playfair_Display'] text-3xl text-[#173128]">Analysis Complete</h2>
+  <p class="mb-6 text-gray-500">We detected the following skin concern:</p>
+
+  <span class="mb-8 inline-block rounded-full bg-orange-100 px-6 py-2 text-orange-600">
+    {{ session.get("skin_concern", "Clear Skin") }}
+  </span>
+
+  <form action="/details">
+    <button class="rounded-xl bg-[#4f7f63] px-8 py-3 text-white transition duration-300 ease-in-out hover:-translate-y-0.5 hover:bg-[#426b54]">
+      Continue to Details ->
+    </button>
+  </form>
+</div>
+
+<footer class="px-6 py-6 text-center text-sm text-gray-500">
+  AI-based skincare suggestions only. Not a medical diagnosis.
+</footer>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analyze Skin | SkinSmart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="relative min-h-screen overflow-x-hidden bg-[#faf8f4] font-['Inter'] text-gray-800">
+<div
+  class="pointer-events-none fixed inset-0 -z-10 bg-center bg-cover opacity-20"
+  style="background-image: url('{{ url_for('static', filename='images/before-after.png') }}');"
+  aria-hidden="true"
+></div>
+<div class="pointer-events-none fixed inset-0 -z-10 bg-[#faf8f4]/82" aria-hidden="true"></div>
+{% set navbar_active = 'analyze' %}
+{% set navbar_hide_primary_cta = true %}
+{% include 'partials/navbar.html' %}
+
+<div class="max-w-4xl mx-auto mt-16 bg-white rounded-2xl p-12 shadow">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="mb-6 rounded-xl border px-4 py-3 text-center font-medium {% if category == 'success' %}border-emerald-200 bg-emerald-50 text-emerald-700{% else %}border-red-200 bg-red-50 text-red-600{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <h1 class="text-4xl font-serif text-center mb-4">Skin Analysis</h1>
+  <p class="text-center text-gray-500 mb-10">
+    Upload your photo and get personalized skincare recommendations
+  </p>
+
+  <div class="mb-8 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm leading-6 text-amber-900">
+    <p class="font-semibold uppercase tracking-wide text-amber-800">Disclaimer</p>
+    <p class="mt-2">
+      This AI tool gives general skincare advice, not medical diagnosis.
+      If your skin problem is serious or not improving, please consult a dermatologist.
+    </p>
+  </div>
+
+  <form action="/analysis" method="POST" enctype="multipart/form-data">
+    <input
+      type="file"
+      name="skin_image"
+      id="skin_image"
+      accept="image/*"
+      required
+      class="hidden"
+      onchange="previewImage(event)"
+    >
+
+    <label for="skin_image" class="cursor-pointer block">
+      <div class="border-2 border-dashed rounded-xl p-16 text-center hover:bg-gray-50 transition">
+        <img
+          id="preview"
+          class="mx-auto mb-4 hidden w-40 h-40 object-cover rounded-xl"
+          alt="Preview"
+        >
+        <p class="text-lg font-medium mb-2">Upload Your Photo</p>
+        <p class="text-sm text-gray-500 mb-6">JPG, PNG up to 10MB</p>
+        <span class="bg-[#4f7f63] text-white px-6 py-3 rounded-xl inline-block">
+          Choose Image
+        </span>
+      </div>
+    </label>
+
+    <div class="text-center mt-6">
+      <button
+        id="submitBtn"
+        type="submit"
+        disabled
+        class="bg-gray-400 text-white px-8 py-3 rounded-xl cursor-not-allowed transition"
+      >
+        Upload and Analyze
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+function previewImage(event) {
+  const file = event.target.files[0];
+  const preview = document.getElementById("preview");
+  const btn = document.getElementById("submitBtn");
+
+  if (file) {
+    preview.src = URL.createObjectURL(file);
+    preview.classList.remove("hidden");
+    btn.disabled = false;
+    btn.classList.remove("bg-gray-400", "cursor-not-allowed");
+    btn.classList.add("bg-[#4f7f63]", "hover:bg-[#426b54]");
+  }
+}
+</script>
+
+<footer class="px-6 py-6 text-center text-sm text-gray-500">
+  AI-based skincare suggestions only. Not a medical diagnosis.
+</footer>
+</body>
+</html>

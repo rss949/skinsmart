@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detected Concern | SkinSmart</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --bg-soft: rgba(255, 255, 255, 0.72);
+      --surface: rgba(255, 255, 255, 0.16);
+      --surface-strong: rgba(255, 255, 255, 0.22);
+      --ink: #1f2937;
+      --muted: #667085;
+      --line: rgba(255, 255, 255, 0.24);
+      --line-soft: rgba(148, 163, 184, 0.22);
+      --badge-start: #ef8f4f;
+      --badge-end: #f6c29d;
+      --success-bg: rgba(233, 250, 240, 0.72);
+      --success-text: #0f7a46;
+      --primary-start: #9f1239;
+      --primary-end: #f97360;
+      --shadow: 0 28px 80px rgba(15, 23, 42, 0.08);
+      --shadow-soft: 0 12px 32px rgba(15, 23, 42, 0.08);
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(251, 252, 253, 0.72), rgba(243, 245, 247, 0.82)),
+        url("{{ url_for('static', filename='images/happy.jpg') }}") center/cover fixed no-repeat,
+        radial-gradient(900px 420px at 15% 15%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 65%),
+        radial-gradient(800px 380px at 85% 10%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 70%),
+        linear-gradient(180deg, #fbfcfd 0%, #f3f5f7 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(120deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0)),
+        radial-gradient(600px 240px at 50% 100%, rgba(226, 232, 240, 0.28), rgba(226, 232, 240, 0));
+      opacity: 0.8;
+    }
+
+    .page {
+      min-height: calc(100vh - 96px);
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 64px 22px 80px;
+      display: grid;
+      place-items: center;
+    }
+
+    .card {
+      position: relative;
+      width: min(100%, 900px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--surface-strong), var(--surface));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 38px 38px 34px;
+      animation: fadeUp 0.75s ease-out both, floatingCard 7s ease-in-out 0.8s infinite;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: calc(var(--radius) - 1px);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06));
+      pointer-events: none;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      font-size: 0.82rem;
+      line-height: 1;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #6b7280;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 16ch;
+      font-size: clamp(2rem, 3vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .status-icon {
+      flex: 0 0 auto;
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.38));
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      box-shadow: 0 14px 30px rgba(148, 163, 184, 0.18);
+      color: #475467;
+    }
+
+    .status-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .result-pill {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      margin-top: 28px;
+      display: inline-flex;
+      align-items: center;
+      min-height: 54px;
+      border-radius: 999px;
+      padding: 0 20px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      border: 1px solid rgba(255, 255, 255, 0.44);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.36), 0 10px 24px rgba(15, 23, 42, 0.06);
+    }
+
+    .result-pill::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-160%);
+      background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.28) 45%, transparent 70%);
+      animation: badgeShimmer 3.8s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    .result-pill.clear {
+      color: var(--success-text);
+      background: linear-gradient(135deg, rgba(225, 247, 234, 0.95), var(--success-bg));
+    }
+
+    .result-pill.concern {
+      color: #a54b14;
+      background: linear-gradient(135deg, rgba(255, 239, 228, 0.96), rgba(255, 255, 255, 0.86));
+    }
+
+    .result-pill.concern span {
+      background: linear-gradient(135deg, var(--badge-start), var(--badge-end));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .messages {
+      margin-top: 20px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .note {
+      margin: 0;
+      max-width: 60ch;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .note.warning {
+      color: #b45309;
+      font-weight: 600;
+    }
+
+    .actions {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+      gap: 14px;
+    }
+
+    .btn {
+      text-decoration: none;
+      text-align: center;
+      border-radius: 16px;
+      padding: 16px 18px;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease, background 0.24s ease, color 0.24s ease;
+      will-change: transform;
+    }
+
+    .btn:hover {
+      transform: scale(1.03);
+    }
+
+    .btn-outline {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.42);
+      border: 1px solid var(--line-soft);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-outline:hover {
+      border-color: rgba(148, 163, 184, 0.34);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    .btn-primary {
+      color: #fff;
+      border: 1px solid transparent;
+      background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
+      box-shadow: 0 16px 30px rgba(190, 24, 93, 0.18);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 20px 34px rgba(190, 24, 93, 0.24);
+    }
+
+    footer {
+      padding: 0 22px 28px;
+      text-align: center;
+      font-size: 0.92rem;
+      color: #6b7280;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes floatingCard {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    @keyframes badgeShimmer {
+      0%, 18% {
+        transform: translateX(-160%);
+      }
+      40%, 100% {
+        transform: translateX(160%);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card,
+      .result-pill::after,
+      .btn {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      .btn:hover {
+        transform: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding-top: 42px;
+      }
+
+      .card {
+        padding: 28px 20px 24px;
+        border-radius: 18px;
+      }
+
+      .top {
+        align-items: center;
+      }
+
+      h1 {
+        max-width: none;
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="text-gray-800">
+  {% set navbar_active = 'analyze' %}
+  {% set navbar_hide_primary_cta = true %}
+  {% include 'partials/navbar.html' %}
+
+  <main class="page">
+    <section class="card">
+      <div class="content">
+        <div class="top">
+          <div>
+            <p class="eyebrow">Detected Concern</p>
+            <h1>Your current primary concern is:</h1>
+          </div>
+          <div class="status-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 3L13.8 8.2L19 10L13.8 11.8L12 17L10.2 11.8L5 10L10.2 8.2L12 3Z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        {% if concern == "Clear Skin" %}
+          <div class="result-pill clear">Clear and Healthy Skin</div>
+        {% else %}
+          <div class="result-pill concern"><span>{{ concern }}</span></div>
+        {% endif %}
+
+        <div class="messages">
+          {% if analysis_warning %}
+            <p class="note warning">{{ analysis_warning }}</p>
+          {% elif analysis_message %}
+            <p class="note">{{ analysis_message }}</p>
+          {% endif %}
+
+          <p class="note">Retake with bright natural light for best analysis consistency.</p>
+        </div>
+
+        <div class="actions">
+          <a class="btn btn-outline" href="{{ url_for('analyze_skin') }}">Retake Photo</a>
+          <a class="btn btn-primary" href="{{ url_for('details') }}">Continue to Details</a>
+        </div>
+      </div>
+    </section>
+  </main>
+<footer>
+  AI-based skincare suggestions only. Not a medical diagnosis.
+</footer>
+</body>
+</html>
